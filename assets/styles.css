@@ -1,0 +1,84 @@
+/* --- Estilos Gerais --- */
+body {
+    background-color: #1a1a1a; /* Fundo principal escuro */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Fonte mais moderna */
+}
+
+/* --- Cabeçalho --- */
+.app-header-title {
+    color: #FFFFFF;
+    font-weight: 700;
+}
+
+.app-header-subtitle {
+    color: #B0B0B0;
+    font-size: 1.1rem;
+}
+
+/* --- Estilo dos Cartões de KPI --- */
+.kpi-card {
+    background-color: #2c2c2c !important; /* Cor de fundo do cartão */
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease-in-out;
+    text-align: center;
+    padding: 15px;
+}
+
+.kpi-card:hover {
+    transform: translateY(-5px); /* Efeito de elevação ao passar o mouse */
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.3);
+}
+
+.card-title {
+    color: #A9A9A9;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.card-value {
+    color: #4dbfbf; /* Cor de destaque para os números */
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+/* --- Container do Gráfico --- */
+.chart-container {
+    background-color: #2c2c2c;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+
+/* --- Botões de Navegação --- */
+.navigation-buttons {
+    background-color: #2c2c2c;
+    padding: 20px;
+    border-radius: 10px;
+    height: 100%;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.navigation-buttons h5 {
+    color: #E5E5E5;
+    text-align: center;
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+.navigation-buttons .btn {
+    font-size: 1rem;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.2s ease-in-out;
+}
+
+.navigation-buttons .btn:hover {
+    transform: scale(1.05); /* Efeito de zoom no botão */
+}

@@ -1,0 +1,111 @@
+/* ========================================================================== */
+/* Estilos para componentes dcc em tema escuro (COM ESCOPO)      */
+/* ========================================================================== */
+/* Cada regra de estilo agora começa com .dashboard-filtros-scope,          */
+/* garantindo que só se aplica a esta página específica.                  */
+/* -------------------------------------------------------------------------- */
+
+
+/* --- Estilo para o componente dcc.Dropdown --- */
+
+/* Caixa principal do dropdown */
+.dashboard-filtros-scope .Select-control {
+    background-color: #22252B !important; /* Cor de fundo escura */
+    border: 1px solid #444 !important;
+}
+
+/* Cor do texto do item selecionado e do placeholder */
+.dashboard-filtros-scope .Select--single > .Select-control .Select-value,
+.dashboard-filtros-scope .Select-placeholder {
+    color: #CCCCCC !important;
+}
+
+/* Cor do texto para seleções múltiplas */
+.dashboard-filtros-scope .Select--multi .Select-value {
+    background-color: #007bff; /* Cor de destaque do bootstrap */
+    color: white !important;
+    border-radius: 4px;
+}
+
+/* Cor do X para remover item em seleções múltiplas */
+.dashboard-filtros-scope .Select--multi .Select-value-icon {
+    border-right: 1px solid white !important;
+}
+.dashboard-filtros-scope .Select--multi .Select-value-icon:hover {
+    background-color: #0056b3 !important;
+}
+
+
+/* Caixa com as opções que aparece ao clicar */
+.dashboard-filtros-scope .Select-menu-outer {
+    background-color: #22252B !important;
+    border: 1px solid #555 !important;
+}
+
+/* Estilo de cada opção na lista */
+.dashboard-filtros-scope .Select-option {
+    background-color: #22252B !important;
+    color: #CCCCCC !important;
+}
+
+/* Estilo da opção quando o mouse está por cima */
+.dashboard-filtros-scope .Select-option.is-focused {
+    background-color: #007bff !important;
+    color: red !important;
+}
+
+/* Seta do dropdown */
+.dashboard-filtros-scope .Select-arrow {
+    border-color: #CCCCCC transparent transparent !important;
+}
+.dashboard-filtros-scope .is-open .Select-arrow {
+    border-color: transparent transparent #CCCCCC !important;
+}
+
+
+/* --- Estilo para o componente dcc.DatePickerRange --- */
+
+/* Inputs de data */
+.dashboard-filtros-scope .DateInput_input,
+.dashboard-filtros-scope .DateInput_input_1 {
+    background-color: #22252B !important;
+    color: #CCCCCC !important;
+    border: 1px solid #444 !important;
+    border-radius: 4px;
+}
+
+/* Estilos do calendário que abre */
+.dashboard-filtros-scope .CalendarMonth_caption {
+    color: #f0f0f0 !important;
+}
+
+.dashboard-filtros-scope .DayPicker_weekHeader_li {
+    color: #CCCCCC !important;
+}
+
+.dashboard-filtros-scope .CalendarDay__default {
+    background: #22252B !important;
+    color: #CCCCCC !important;
+    border: 1px solid #1a1a1a !important;
+}
+.dashboard-filtros-scope .CalendarDay__default:hover {
+    background: #333 !important;
+}
+
+/* Dia selecionado (início e fim) */
+.dashboard-filtros-scope .CalendarDay__selected,
+.dashboard-filtros-scope .CalendarDay__selected:active,
+.dashboard-filtros-scope .CalendarDay__selected:hover {
+    background: #007bff !important;
+    border: 1px double #007bff !important;
+    color: white !important;
+}
+
+/* Dias no intervalo entre início e fim */
+.dashboard-filtros-scope .CalendarDay__hovered_span,
+.dashboard-filtros-scope .CalendarDay__hovered_span:hover,
+.dashboard-filtros-scope .CalendarDay__selected_span {
+     background: #0056b3 !important; /* Um azul mais escuro */
+     border: 1px double #0056b3 !important;
+     color: white !important;
+}
