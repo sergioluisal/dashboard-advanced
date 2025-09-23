@@ -6,14 +6,30 @@ from dash import html, dcc
 #===========================================================================|
 #|                Carregar, Tratar Dados e Criar Gráficos                  |
 #|===========================================================================|
+import os # Certifique-se de que esta linha está no topo do arquivo com os outros imports
+
+# ============================================================
+# Carregar os dados
+# ============================================================
+
+# Constrói o caminho absoluto para o arquivo de dados
+# Isso assume que o arquivo 'USP_Completa.xlsx' está na pasta raiz do projeto (junto com app.py)
 try:
-    df = pd.read_excel("USP_Completa.xlsx")
+    # Sobe um nível de diretório (da pasta 'pages' para a pasta raiz)
+    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    # Junta o caminho da pasta raiz com o nome do arquivo
+    DATA_PATH = os.path.join(BASE_DIR, "USP_Completa.xlsx")
+    
+    # Tenta carregar o DataFrame usando o caminho completo
+    df = pd.read_excel(DATA_PATH)
+    print(f"SUCESSO (page1.py): Arquivo de dados carregado de '{DATA_PATH}'")
+
 except FileNotFoundError:
-    print("AVISO: Ficheiro 'USP_Completa.xlsx' não encontrado. A usar dados de exemplo.")
-    df = pd.DataFrame({
-        "Última ocorrência": ["Matriculado", "Titulado", "Desligado", "Trancado", "Titulado"],
-        "Curso": ["Mestrado", "Doutorado", "Mestrado", "Doutorado Direto", "Mestrado"]
-    })
+    print(f"ERRO CRÍTICO (page1.py): O arquivo 'USP_Completa.xlsx' não foi encontrado no caminho esperado: '{DATA_PATH}'.")
+    print("A aplicação não pode iniciar sem os dados. Verifique se o arquivo existe e está no local correto.")
+    # Cria um DataFrame vazio para evitar que a aplicação quebre na inicialização,
+    # mas os gráficos não terão dados.
+    df = pd.DataFrame()
 
 # Classificar Alunos
 ativos_list = ["Matrícula de Acompanhamento", "Matriculado", "Mudança de Nível", "Prorrogação", "Trancado", "Transferido de Área"]
