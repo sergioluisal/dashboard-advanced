@@ -3,29 +3,25 @@ import plotly.express as px
 import plotly.graph_objects as go
 import dash_bootstrap_components as dbc
 from dash import html, dcc, Input, Output
-import os
 
 # ============================================================
 # Carregar os dados
 # ============================================================
 try:
-    # Sobe um nível de diretório (da pasta 'pages' para a pasta raiz)
-    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    # Junta o caminho da pasta raiz com o nome do arquivo
-    DATA_PATH = os.path.join(BASE_DIR, "USP_Completa.xlsx")
-    
-    # Tenta carregar o DataFrame usando o caminho completo
-    df = pd.read_excel(DATA_PATH)
-    print(f"SUCESSO (page1.py): Arquivo de dados carregado de '{DATA_PATH}'")
-
+    df = pd.read_excel("USP_Completa.xlsx")
 except FileNotFoundError:
-    print(f"ERRO CRÍTICO (page1.py): O arquivo 'USP_Completa.xlsx' não foi encontrado no caminho esperado: '{DATA_PATH}'.")
-    print("A aplicação não pode iniciar sem os dados. Verifique se o arquivo existe e está no local correto.")
-    # Cria um DataFrame vazio para evitar que a aplicação quebre na inicialização,
-    # mas os gráficos não terão dados.
-    df = pd.DataFrame()
+    print("AVISO (page1.py): Ficheiro 'USP_Completa.xlsx' não encontrado. A usar dados de exemplo.")
+    df = pd.DataFrame({
+        "Programa": ["Mestrado", "Doutorado", "Mestrado", "Mestrado", "Doutorado"],
+        "Curso": ["Enfermagem", "Educação", "Administração", "História", "Matemática"],
+        "Última ocorrência": ["Matriculado", "Titulado", "Prorrogação", "Desligado", "Matricula de Acompanhamento"],
+        "Raça/Cor": ["Branca", "Parda", "Preta", "Parda", "Branca"],
+        "Tempo para titulação (meses)": [24, 30, 28, 35, 26],
+        "Financiamento": ["CAPES", "Sem informação", "CNPq", "CAPES", "Outro"],
+        "Primeira matrícula": pd.date_range("2020-01-01", periods=5, freq="Y")
+    })
 
-# ------------------------------
+    # ------------------------------
 # Normalização dos nomes de curso
 # ------------------------------
 if "Curso" in df.columns:
@@ -298,6 +294,3 @@ def register_callbacks(app):
             f.update_layout(paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)")
             
         return fig_raca, fig_titulacao, fig_fin, fig_status
-
-
-        
