@@ -252,6 +252,13 @@ def atualizar_page2(programa, curso, status, start_date, end_date):
 #===========================================================================|
 #if __name__ == '__main__':
     #app.run(debug=True)
+from dash import Dash, html
+
+app = Dash(__name__)
+server = app.server  # Render precisa disso
+
+app.layout = html.Div("Hello Render!")
+
 
 
 
