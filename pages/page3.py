@@ -2,32 +2,39 @@ import pandas as pd
 import plotly.express as px
 import dash_bootstrap_components as dbc
 from dash import html, dcc, Input, Output, register_page, callback
+import os # Certifique-se de que esta linha está no topo do arquivo com os outros imports
 
-# ==============================================================
-# Registrar página
-# ==============================================================
-#register_page(__name__, path="/page3", name="Dashboard Acadêmico")
-
-# ==============================================================
+# ============================================================
 # Carregar e Tratar Dados
-# ==============================================================
+# ============================================================
 try:
-    df = pd.read_excel("USP_Completa.xlsx")
+    # Constrói o caminho absoluto para o arquivo de dados
+    # Sobe um nível de diretório (da pasta 'pages' para a pasta raiz)
+    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    # Junta o caminho da pasta raiz com o nome do arquivo
+    DATA_PATH = os.path.join(BASE_DIR, "USP_Completa.xlsx")
+    
+    # Tenta carregar o DataFrame usando o caminho completo
+    df = pd.read_excel(DATA_PATH)
+    print(f"SUCESSO (page3.py): Arquivo de dados carregado de '{DATA_PATH}'")
+
+    # Continua com o tratamento de dados APENAS se o arquivo foi carregado
     df["Primeira matrícula"] = pd.to_datetime(df["Primeira matrícula"], errors="coerce")
     df.dropna(subset=["Primeira matrícula"], inplace=True)
     df["Curso"] = df["Curso"].replace("Doutorado Direto", "Doutorado")
     df['Mes_Ano_Matricula'] = df['Primeira matrícula'].dt.to_period('M').astype(str)
 
 except FileNotFoundError:
-    print("AVISO: Arquivo 'USP_Completa.xlsx' não encontrado. Usando dados de exemplo.")
-    df = pd.DataFrame({
-        "Programa": ["Física", "Química", "Física", "Biologia", "Química"],
-        "Curso": ["Mestrado", "Doutorado", "Doutorado", "Mestrado", "Mestrado"],
-        "Primeira matrícula": pd.to_datetime(
-            ["2022-03-15", "2022-08-20", "2023-03-10", "2023-08-25", "2024-03-12"]
-        ),
-    })
-    df['Mes_Ano_Matricula'] = df['Primeira matrícula'].dt.to_period('M').astype(str)
+    print(f"ERRO CRÍTICO (page3.py): O arquivo 'USP_Completa.xlsx' não foi encontrado no caminho esperado: '{DATA_PATH}'.")
+    # Cria um DataFrame vazio com as colunas esperadas para evitar que o resto do app quebre
+    df = pd.DataFrame(columns=["Programa", "Curso", "Primeira matrícula", "Mes_Ano_Matricula"])
+
+except Exception as e:
+    print(f"ERRO INESPERADO (page3.py) ao carregar ou tratar os dados: {e}")
+    df = pd.DataFrame(columns=["Programa", "Curso", "Primeira matrícula", "Mes_Ano_Matricula"])
+
+# FIM DO NOVO CÓDIGO
+
 
 programas_opcoes = sorted(df["Programa"].unique())
 cursos_opcoes = sorted(df["Curso"].unique())
