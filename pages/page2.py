@@ -3,23 +3,30 @@ import plotly.express as px
 from dateutil.relativedelta import relativedelta
 import dash_bootstrap_components as dbc
 from dash import html, dcc
+import os # Certifique-se de que esta linha está no topo do arquivo com os outros imports
 
-#===========================================================================|
-#|                           Carregar e Tratar Dados                       |
-#===========================================================================|
+# ============================================================
+# Carregar os dados
+# ============================================================
+
+# Constrói o caminho absoluto para o arquivo de dados
+# Isso assume que o arquivo 'USP_Completa.xlsx' está na pasta raiz do projeto (junto com app.py)
 try:
-    df = pd.read_excel("USP_Completa.xlsx")
+    # Sobe um nível de diretório (da pasta 'pages' para a pasta raiz)
+    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    # Junta o caminho da pasta raiz com o nome do arquivo
+    DATA_PATH = os.path.join(BASE_DIR, "USP_Completa.xlsx")
+    
+    # Tenta carregar o DataFrame usando o caminho completo
+    df = pd.read_excel(DATA_PATH)
+    print(f"SUCESSO (page1.py): Arquivo de dados carregado de '{DATA_PATH}'")
+
 except FileNotFoundError:
-    print("AVISO (page2.py): Ficheiro 'USP_Completa.xlsx' não encontrado. A usar dados de exemplo.")
-    df = pd.DataFrame({
-        "Data da ocorrência": pd.to_datetime(['2023-05-10', '2024-01-15', '2022-11-20', '2023-08-01']),
-        "Primeira matrícula": pd.to_datetime(['2021-02-10', '2021-08-15', '2021-02-10', '2022-02-01']),
-        "Última ocorrência": ["Matriculado", "Titulado", "Desligado", "Trancado"],
-        "Data da defesa": [pd.NaT, '2024-01-15', pd.NaT, pd.NaT],
-        "Nacionalidade": ["Brasileira", "Brasileira", "Argentina", "Brasileira"],
-        "Programa": ["Engenharia", "Direito", "Medicina", "Engenharia"],
-        "Curso": ["Mestrado", "Doutorado", "Mestrado", "Mestrado"]
-    })
+    print(f"ERRO CRÍTICO (page1.py): O arquivo 'USP_Completa.xlsx' não foi encontrado no caminho esperado: '{DATA_PATH}'.")
+    print("A aplicação não pode iniciar sem os dados. Verifique se o arquivo existe e está no local correto.")
+    # Cria um DataFrame vazio para evitar que a aplicação quebre na inicialização,
+    # mas os gráficos não terão dados.
+    df = pd.DataFrame()
 
 # ------------------------------
 # Normalização dos nomes de curso
