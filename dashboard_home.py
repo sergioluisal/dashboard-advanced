@@ -250,6 +250,8 @@ def atualizar_page2(programa, curso, status, start_date, end_date):
 #===========================================================================|
 #|                             Executar o App                              |
 #===========================================================================|
+if __name__ == '__main__':
+    app.run(debug=False, host='0.0.0.0', port=8080)
 
 
 
