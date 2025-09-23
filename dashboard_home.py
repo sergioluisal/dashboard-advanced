@@ -253,6 +253,7 @@ def atualizar_page2(programa, curso, status, start_date, end_date):
 #if __name__ == '__main__':
     #app.run(debug=True)
 
+import os
 from dash import Dash, html
 
 app = Dash(__name__)
@@ -261,5 +262,7 @@ server = app.server  # importante para o Render reconhecer
 app.layout = html.Div("Hello Render!")
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 8050))  # pega a porta do Render
+    app.run(host="0.0.0.0", port=port, debug=False)
+
 
