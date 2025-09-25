@@ -110,15 +110,15 @@ layout = dbc.Container([
         ),
 
         # Raça/Cor
-        dbc.Col(
-            dcc.Dropdown(
-                id='filtro-raca',
-                options=[{'label': i, 'value': i} for i in df["Raça/Cor"].dropna().unique()],
-                multi=True,
-                placeholder="Selecione Raça/Cor",
-                style={"backgroundColor": "#2c2c2c", "color": "black", "height": "38px"}
-            ), md=3
-        ),
+        #dbc.Col(
+            #dcc.Dropdown(
+                #id='filtro-raca',
+                #options=[{'label': i, 'value': i} for i in df["Raça/Cor"].dropna().unique()],
+                #multi=True,
+                #placeholder="Selecione Raça/Cor",
+                #style={"backgroundColor": "#2c2c2c", "color": "black", "height": "38px"}
+            #), md=3
+        #),
 
         # Programa
         dbc.Col(
@@ -204,7 +204,7 @@ def register_callbacks(app):
         [
             Input('filtro-financiamento', 'value'),
             Input('filtro-titulacao', 'value'),
-            Input('filtro-raca', 'value'),
+            #Input('filtro-raca', 'value'),
             Input('filtro-programa1', 'value'),
             Input('filtro-curso1', 'value'),
             Input('filtro-status1', 'value'),
@@ -220,8 +220,8 @@ def register_callbacks(app):
             dff = dff[dff["Financiamento"].isin(financiamento)]
         if titulacao:
             dff = dff[dff["Tempo para titulação (meses)"].isin(titulacao)]
-        if raca:
-            dff = dff[dff["Raça/Cor"].isin(raca)]
+        #if raca:
+            #dff = dff[dff["Raça/Cor"].isin(raca)]
         if programa:
             dff = dff[dff["Programa"].isin(programa)]
         if curso:
