@@ -212,7 +212,8 @@ def register_callbacks(app):
             Input('filtro-periodo', 'end_date'),
         ]
     )
-    def atualizar_graficos(financiamento, titulacao, raca, programa, curso, status, start_date, end_date):
+    def atualizar_graficos(financiamento, titulacao, programa, curso, status, start_date, end_date):
+    #raca: quando precisar só adicionar acima
         dff = df.copy()
 
         # Aplicar filtros
