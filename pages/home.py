@@ -51,11 +51,11 @@ TEMPLATE = "plotly_dark"
 CORES_GRAFICO = ["#00e5ff", "#f800ff"]
 df_mestrado = df_filtrado[df_filtrado["Curso"] == "Mestrado"]["Status"].value_counts().reset_index()
 df_mestrado.columns = ['Status', 'Total']
-fig_mestrado = px.pie(df_mestrado, values='Total', names='Status', title="Situação - Mestrado", hole=.4, template=TEMPLATE, color_discrete_sequence=CORES_GRAFICO)
+fig_mestrado = px.pie(df_mestrado, values='Total', names='Status', title="Mestrado", hole=.4, template=TEMPLATE, color_discrete_sequence=CORES_GRAFICO)
 
 df_doutorado = df_filtrado[df_filtrado["Curso"] == "Doutorado"]["Status"].value_counts().reset_index()
 df_doutorado.columns = ['Status', 'Total']
-fig_doutorado = px.pie(df_doutorado, values='Total', names='Status', title="Situação - Doutorado", hole=.4, template=TEMPLATE, color_discrete_sequence=CORES_GRAFICO)
+fig_doutorado = px.pie(df_doutorado, values='Total', names='Status', title="Doutorado", hole=.4, template=TEMPLATE, color_discrete_sequence=CORES_GRAFICO)
 
 for fig in [fig_mestrado, fig_doutorado]:
     fig.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', title_x=0.5, legend=dict(orientation="h", yanchor="bottom", y=-0.2, xanchor="center", x=0.5))
