@@ -51,25 +51,37 @@ df["período_meses_inteiros"] = df.apply(diff_meses, axis=1)
 df["Ano_matricula"] = df["Primeira matrícula"].dt.year
 
 # Classificação de status
-ativos = ["Matrícula de Acompanhamento", "Matriculado", "Mudança de Nível", "Prorrogação", "Trancado", "Transferido de Área"]
-nao_ativos = ["Desligado"]
+#ativos = ["Matrícula de Acompanhamento", "Matriculado", "Mudança de Nível", "Prorrogação", "Trancado", "Transferido de Área"]
+#nao_ativos = ["Desligado"]
+status_map = {
+    "Matricula de Acompanhamento": "Ativos",
+    "Matriculado": "Ativos",
+    "Mudança de Nível": "Ativos",
+    "Prorrogação": "Ativos",
+    "Transcado": "Ativos",
+    "Transferido de Area": "Ativos",
+    "Titulado": "Titulados",
+    "Desligado": "Desligados"
+}
 
-def classificar_aluno(row):
-    if row["Última ocorrência"] in ativos:
-        return "Ativos"
-    elif row["Última ocorrência"] in nao_ativos:
-        return "Desligados"
-    elif row["Última ocorrência"] == "Titulados":
-        return "Titulados" if pd.notna(row["Data da defesa"]) else "Outros"
+df["Status"] = df["Última ocorrência"].map(status_map).fillna("Outros")
 
-df["Status_aluno"] = df.apply(classificar_aluno, axis=1)
+#def classificar_aluno(row):
+#    if row["Última ocorrência"] in ativos:
+#        return "Ativos"
+#    elif row["Última ocorrência"] in nao_ativos:
+#        return "Desligados"
+#    elif row["Última ocorrência"] == "Titulados":
+#        return "Titulados" if pd.notna(row["Data da defesa"]) else "Outros"
+
+#df["Status_aluno"] = df.apply(classificar_aluno, axis=1)
 
 #===========================================================================|
 #|                  Opções de Filtros Dinâmicos                            |
 #===========================================================================|
 programas_opcoes = sorted(df["Programa"].dropna().unique()) if "Programa" in df.columns else []
 cursos_opcoes = sorted(df["Curso"].dropna().unique()) if "Curso" in df.columns else []
-ativos_opcoes = sorted(df["Status_aluno"].dropna().unique())
+ativos_opcoes = sorted(df["Status"].dropna().unique())
 
 #|==========================================================================|
 #|                       Layout do Conteúdo da Página 2                     |
