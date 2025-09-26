@@ -202,8 +202,8 @@ def register_callbacks(app):
             Output('status-graph', 'figure'),
         ],
         [
-            Input('filtro-financiamento', 'value'),
-            Input('filtro-titulacao', 'value'),
+            #Input('filtro-financiamento', 'value'),
+            #Input('filtro-titulacao', 'value'),
             #Input('filtro-raca', 'value'),
             Input('filtro-programa1', 'value'),
             Input('filtro-curso1', 'value'),
@@ -212,15 +212,16 @@ def register_callbacks(app):
             Input('filtro-periodo', 'end_date'),
         ]
     )
-    def atualizar_graficos(financiamento, titulacao, programa, curso, status, start_date, end_date):
-    #raca: quando precisar só adicionar acima
+    def atualizar_graficos(programa, curso, status, start_date, end_date):
+    #raca, financiamento, titulacao: quando precisar só adicionar acima
+        
         dff = df.copy()
 
         # Aplicar filtros
-        if financiamento:
-            dff = dff[dff["Financiamento"].isin(financiamento)]
-        if titulacao:
-            dff = dff[dff["Tempo para titulação (meses)"].isin(titulacao)]
+        #if financiamento:
+            #dff = dff[dff["Financiamento"].isin(financiamento)]
+        #if titulacao:
+            #dff = dff[dff["Tempo para titulação (meses)"].isin(titulacao)]
         #if raca:
             #dff = dff[dff["Raça/Cor"].isin(raca)]
         if programa:
