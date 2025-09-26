@@ -107,20 +107,7 @@ layout = dbc.Container([
                 placeholder="Selecione Status (Ativos/Titulados/Desligados)",
                 style={"backgroundColor": "#2c2c2c", "color": "black", "height": "38px"}
             ), md=3
-        ),
-
-        # Período
-        dbc.Col(
-            dcc.DatePickerRange(
-                id='filtro-periodo',
-                min_date_allowed=df["Primeira matrícula"].min().date() if "Primeira matrícula" in df.columns else None,
-                max_date_allowed=df["Primeira matrícula"].max().date() if "Primeira matrícula" in df.columns else None,
-                start_date=df["Primeira matrícula"].min().date() if "Primeira matrícula" in df.columns else None,
-                end_date=df["Primeira matrícula"].max().date() if "Primeira matrícula" in df.columns else None,
-                display_format='DD/MM/YYYY',
-                style={"height": "38px", "width": "100%"}
-            ), md=3
-        ),
+        ),       
 
         # Programa
         dbc.Col(
@@ -130,6 +117,19 @@ layout = dbc.Container([
                 multi=True,
                 placeholder="Selecione o(s) Programa(s)",
                 style={"backgroundColor": "#2c2c2c", "color": "black", "height": "38px"}
+            ), md=3
+        ),
+        
+         # Período
+        dbc.Col(
+            dcc.DatePickerRange(
+                id='filtro-periodo',
+                min_date_allowed=df["Primeira matrícula"].min().date() if "Primeira matrícula" in df.columns else None,
+                max_date_allowed=df["Primeira matrícula"].max().date() if "Primeira matrícula" in df.columns else None,
+                start_date=df["Primeira matrícula"].min().date() if "Primeira matrícula" in df.columns else None,
+                end_date=df["Primeira matrícula"].max().date() if "Primeira matrícula" in df.columns else None,
+                display_format='DD/MM/YYYY',
+                style={"height": "38px", "width": "100%"}
             ), md=3
         ),
     ], className="mb-3"),
