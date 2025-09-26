@@ -69,7 +69,7 @@ df["Status_aluno"] = df.apply(classificar_aluno, axis=1)
 #===========================================================================|
 programas_opcoes = sorted(df["Programa"].dropna().unique()) if "Programa" in df.columns else []
 cursos_opcoes = sorted(df["Curso"].dropna().unique()) if "Curso" in df.columns else []
-ativos_opcoes = sorted(df["Status"].dropna().unique())
+ativos_opcoes = sorted(df["Status_aluno"].dropna().unique())
 
 #|==========================================================================|
 #|                       Layout do Conteúdo da Página 2                     |
