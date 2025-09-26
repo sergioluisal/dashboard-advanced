@@ -49,7 +49,7 @@ TEMPLATE = "plotly_dark"
 layout = dbc.Container([
     # Linha do título
     dbc.Row(
-        dbc.Col(html.H1("Informações Pessoais e Acadêmicas",
+        dbc.Col(html.H1("Informações Acadêmicas",
                         className="text-center text-primary my-4"), width=12)
     ),
     dbc.Row(
