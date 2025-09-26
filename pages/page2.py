@@ -110,7 +110,7 @@ layout = dbc.Container([
                                 id='filtro-ativos',
                                 options=[{'label': i, 'value': i} for i in ativos_opcoes],
                                 multi=True,
-                                placeholder="Selecione Status (Ativos/Titulados/Desligados)",
+                                placeholder="Selecione Status (Ativos/Desligados)",
                                 style={"backgroundColor": "#2c2c2c", "color": "black", "height": "38px"}
                             ), md=3
                         ),
