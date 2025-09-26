@@ -196,7 +196,7 @@ def atualizar_page2(programa, curso, status, start_date, end_date):
     if df.empty:
         fig5 = _empty_fig("Distribuição de Status dos Alunos")
     else:
-        df_status = df["Status_aluno"].value_counts().reset_index()
+        df_status = df["Status"].value_counts().reset_index()
         df_status.columns = ["Status", "Total"]
         df_status = df_status[df_status["Total"] > 0]
         df_status = df_status[df_status["Total"] >= df_status["Total"].sum() * 0.005]  # remover fatias irrelevantes
