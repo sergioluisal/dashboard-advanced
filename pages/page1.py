@@ -88,26 +88,26 @@ layout = dbc.Container([
     # ===================== Linha de Filtros 1 =====================
     dbc.Row([
         # Financiamento
-        dbc.Col(
-            dcc.Dropdown(
-                id='filtro-financiamento',
-                options=[{'label': i, 'value': i} for i in df["Financiamento"].dropna().unique()],
-                multi=True,
-                placeholder="Selecione Financiamento",
-                style={"backgroundColor": "#2c2c2c", "color": "black", "height": "38px"}
-            ), md=3
-        ),
+        #dbc.Col(
+            #dcc.Dropdown(
+                #id='filtro-financiamento',
+                #options=[{'label': i, 'value': i} for i in df["Financiamento"].dropna().unique()],
+                #multi=True,
+                #placeholder="Selecione Financiamento",
+                #style={"backgroundColor": "#2c2c2c", "color": "black", "height": "38px"}
+            #), md=3
+        #),
 
         # Titulação
-        dbc.Col(
-            dcc.Dropdown(
-                id='filtro-titulacao',
-                options=[{'label': str(i), 'value': i} for i in sorted(df["Tempo para titulação (meses)"].dropna().unique())],
-                multi=True,
-                placeholder="Selecione Titulação (meses)",
-                style={"backgroundColor": "#2c2c2c", "color": "black", "height": "38px"}
-            ), md=3
-        ),
+        #dbc.Col(
+            #dcc.Dropdown(
+                #id='filtro-titulacao',
+                #options=[{'label': str(i), 'value': i} for i in sorted(df["Tempo para titulação (meses)"].dropna().unique())],
+                #multi=True,
+                #placeholder="Selecione Titulação (meses)",
+                #style={"backgroundColor": "#2c2c2c", "color": "black", "height": "38px"}
+            #), md=3
+        #),
 
         # Raça/Cor
         #dbc.Col(
