@@ -86,7 +86,19 @@ layout = dbc.Container([
     ),
 
     # ===================== Linha de Filtros 1 =====================
-    dbc.Row([     
+    dbc.Row([   
+
+        # Programa
+        dbc.Col(
+            dcc.Dropdown(
+                id="filtro-programa1",
+                options=[{"label": i, "value": i} for i in df["Programa"].dropna().unique()],
+                multi=True,
+                placeholder="Selecione o(s) Programa(s)",
+                style={"backgroundColor": "#2c2c2c", "color": "black", "height": "38px"}
+            ), md=3
+        ),
+        
         # Curso
         dbc.Col(
             dcc.Dropdown(
@@ -107,18 +119,7 @@ layout = dbc.Container([
                 placeholder="Selecione Status (Ativos/Titulados/Desligados)",
                 style={"backgroundColor": "#2c2c2c", "color": "black", "height": "38px"}
             ), md=3
-        ),       
-
-        # Programa
-        dbc.Col(
-            dcc.Dropdown(
-                id="filtro-programa1",
-                options=[{"label": i, "value": i} for i in df["Programa"].dropna().unique()],
-                multi=True,
-                placeholder="Selecione o(s) Programa(s)",
-                style={"backgroundColor": "#2c2c2c", "color": "black", "height": "38px"}
-            ), md=3
-        ),
+        ),         
         
          # Período
         dbc.Col(
