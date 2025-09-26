@@ -51,30 +51,18 @@ df["período_meses_inteiros"] = df.apply(diff_meses, axis=1)
 df["Ano_matricula"] = df["Primeira matrícula"].dt.year
 
 # Classificação de status
-#ativos = ["Matrícula de Acompanhamento", "Matriculado", "Mudança de Nível", "Prorrogação", "Trancado", "Transferido de Área"]
-#nao_ativos = ["Desligado"]
-status_map = {
-    "Matricula de Acompanhamento": "Ativos",
-    "Matriculado": "Ativos",
-    "Mudança de Nível": "Ativos",
-    "Prorrogação": "Ativos",
-    "Transcado": "Ativos",
-    "Transferido de Area": "Ativos",
-    "Titulado": "Titulados",
-    "Desligado": "Desligados"
-}
+ativos = ["Matrícula de Acompanhamento", "Matriculado", "Mudança de Nível", "Prorrogação", "Trancado", "Transferido de Área"]
+nao_ativos = ["Desligado"]
 
-df["Status"] = df["Última ocorrência"].map(status_map).fillna("Outros")
+def classificar_aluno(row):
+    if row["Última ocorrência"] in ativos:
+        return "Ativos"
+    elif row["Última ocorrência"] in nao_ativos:
+        return "Desligados"
+    elif row["Última ocorrência"] == "Titulados":
+        return "Titulados" if pd.notna(row["Data da defesa"]) else "Outros"
 
-#def classificar_aluno(row):
-#    if row["Última ocorrência"] in ativos:
-#        return "Ativos"
-#    elif row["Última ocorrência"] in nao_ativos:
-#        return "Desligados"
-#    elif row["Última ocorrência"] == "Titulados":
-#        return "Titulados" if pd.notna(row["Data da defesa"]) else "Outros"
-
-#df["Status_aluno"] = df.apply(classificar_aluno, axis=1)
+df["Status_aluno"] = df.apply(classificar_aluno, axis=1)
 
 #===========================================================================|
 #|                  Opções de Filtros Dinâmicos                            |
