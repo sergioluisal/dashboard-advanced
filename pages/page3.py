@@ -53,7 +53,7 @@ layout = dbc.Container([
                         className="text-center text-primary my-4"), width=12)
     ),
     dbc.Row(
-        dbc.Col(html.H1("Filtros Analítico",
+        dbc.Col(html.H1("Filtros Analíticos",
                         className="text-center my-4"), width=12)
     ),
 
