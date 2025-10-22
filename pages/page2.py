@@ -55,12 +55,16 @@ ativos = ["Matrícula de Acompanhamento", "Matriculado", "Mudança de Nível", "
 nao_ativos = ["Desligado"]
 
 def classificar_aluno(row):
-    if row["Última ocorrência"] in ativos:
+    ocorrencia = str(row["Última ocorrência"]).strip().lower()
+
+    if ocorrencia in [a.lower() for a in ativos]:
         return "Ativos"
-    elif row["Última ocorrência"] in nao_ativos:
+    elif ocorrencia in [n.lower() for n in nao_ativos]:
         return "Desligados"
-    elif row["Última ocorrência"] == "Titulados":
-        return "Titulados" if pd.notna(row["Data da defesa"]) else "Outros"
+    elif ocorrencia in ["titulado", "titulados"]:
+        return "Titulados"
+    else:
+        return "Outros"
 
 df["Status_aluno"] = df.apply(classificar_aluno, axis=1)
 
