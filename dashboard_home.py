@@ -193,23 +193,38 @@ def atualizar_page2(programa, curso, status, start_date, end_date):
     )  
 
     # fig5 - Status
-    if df.empty:
-        fig5 = _empty_fig("Distribuição de Status dos Alunos")
+    status_categorias = ["Ativos", "Titulados", "Desligados"]
+
+    df_status = (
+    df["Status_aluno"]
+    .value_counts()
+    .reindex(status_categorias, fill_value=0)
+    .reset_index()
+    )
+    df_status.columns = ["Status", "Total"]
+
+    if df_status["Total"].sum() == 0:
+       fig5 = _empty_fig("Distribuição de Status dos Alunos")
     else:
-        df_status = df["Status_aluno"].value_counts().reset_index()
-        df_status.columns = ["Status", "Total"]
-        df_status = df_status[df_status["Total"] > 0]
-        df_status = df_status[df_status["Total"] >= df_status["Total"].sum() * 0.005]  # remover fatias irrelevantes
-        if df_status.empty:
-            fig5 = _empty_fig("Distribuição de Status dos Alunos")
-        else:
-            fig5 = px.pie(df_status, values="Total", names="Status",
-                          title="Distribuição de Status dos Alunos",
-                          hole=0.5, template=TEMPLATE)
+        fig5 = px.pie(
+        df_status,
+        values="Total",
+        names="Status",
+        title="Distribuição de Status dos Alunos",
+        hole=0.5,
+        template=TEMPLATE,
+        color="Status",
+        color_discrete_map={
+            "Ativos": "#636EFA",
+            "Titulados": "#00CC96",
+            "Desligados": "#EF553B"
+        }
+    )
+
     fig5.update_layout(
     paper_bgcolor="rgba(0,0,0,0)",
     plot_bgcolor="rgba(0,0,0,0)"
-    )
+   )
 
     # fig6 - Nacionalidade
     tot_br = df[df["Nacionalidade"].str.lower() == "brasileira"].shape[0]
