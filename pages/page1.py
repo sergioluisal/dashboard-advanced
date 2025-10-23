@@ -9,7 +9,11 @@ from pages.page2 import programas_opcoes, cursos_opcoes, ativos_opcoes
 # Carregar os dados
 # ============================================================
 try:
-    df = pd.read_excel("USP_Completa.xlsx")
+    # Sobe um nível de diretório (da pasta 'pages' para a pasta raiz)
+    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    # Junta o caminho da pasta raiz com o nome do arquivo
+    DATA_PATH = os.path.join(BASE_DIR, "USP_Completa.xlsx")
+    
 except FileNotFoundError:
     print("AVISO (page1.py): Ficheiro 'USP_Completa.xlsx' não encontrado. A usar dados de exemplo.")
     df = pd.DataFrame({
