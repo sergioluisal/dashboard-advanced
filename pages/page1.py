@@ -9,17 +9,23 @@ from pages.page2 import programas_opcoes, cursos_opcoes, ativos_opcoes
 # Carregar os dados
 # ============================================================
 try:
-    df = pd.read_excel("USP_Completa.xlsx")   
+    # Caminho absoluto do arquivo Excel (funciona local e no Render)
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    df_path = os.path.join(BASE_DIR, "../USP_Completa.xlsx")
+
+    print(f"📂 Lendo dados a partir de: {df_path}")
+    df = pd.read_excel(df_path)
+
 except FileNotFoundError:
-    print("AVISO (page1.py): Ficheiro 'USP_Completa.xlsx' não encontrado. A usar dados de exemplo.")
+    print("⚠️ AVISO (page2.py): Arquivo 'USP_Completa.xlsx' não encontrado. Usando dados de exemplo.")
     df = pd.DataFrame({
-        "Programa": ["Mestrado", "Doutorado", "Mestrado", "Mestrado", "Doutorado"],
-        "Curso": ["Enfermagem", "Educação", "Administração", "História", "Matemática"],
-        "Última ocorrência": ["Matriculado", "Titulado", "Prorrogação", "Desligado", "Matricula de Acompanhamento"],
-        "Raça/Cor": ["Branca", "Parda", "Preta", "Parda", "Branca"],
-        "Tempo para titulação (meses)": [24, 30, 28, 35, 26],
-        "Financiamento": ["CAPES", "Sem informação", "CNPq", "CAPES", "Outro"],
-        "Primeira matrícula": pd.date_range("2020-01-01", periods=5, freq="Y")
+        "Data da ocorrência": pd.to_datetime(['2023-05-10', '2024-01-15', '2022-11-20', '2023-08-01']),
+        "Primeira matrícula": pd.to_datetime(['2021-02-10', '2021-08-15', '2021-02-10', '2022-02-01']),
+        "Última ocorrência": ["Matriculado", "Titulado", "Desligado", "Trancado"],
+        "Data da defesa": [pd.NaT, '2024-01-15', pd.NaT, pd.NaT],
+        "Nacionalidade": ["Brasileira", "Brasileira", "Argentina", "Brasileira"],
+        "Programa": ["Engenharia", "Direito", "Medicina", "Engenharia"],
+        "Curso": ["Mestrado", "Doutorado", "Mestrado", "Mestrado"]
     })
 
 programas_opcoes = sorted(df["Programa"].dropna().unique()) if "Programa" in df.columns else []
