@@ -178,7 +178,7 @@ def register_callbacks(app):
         [
             Input('filtro-programa', 'value'),
             Input('filtro-curso', 'value'),
-            Input('filtro-ativos', 'value'),
+            Input('filtro-status', 'value'),
             Input('filtro-periodo2', 'start_date'),
             Input('filtro-periodo2', 'end_date'),
         ]
@@ -186,7 +186,7 @@ def register_callbacks(app):
     def atualizar_graficos(programa, curso, status, start_date, end_date):
         dff = df.copy()
 
-        # Aplicar filtros
+        # ===================== Aplicar filtros =====================
         if programa:
             dff = dff[dff["Programa"].isin(programa)]
         if curso:
@@ -201,10 +201,8 @@ def register_callbacks(app):
             ]
 
         # ===================== Gráfico Raça/Cor =====================
-        if "Raça/Cor" in dff.columns:
-            dff["Raça/Cor"] = dff["Raça/Cor"].fillna("Sem informação")
-            dff["Raça/Cor"] = dff["Raça/Cor"].replace("", "Sem informação")
-
+        if "Raça/Cor" in dff.columns and not dff["Raça/Cor"].dropna().empty:
+            dff["Raça/Cor"] = dff["Raça/Cor"].fillna("Sem informação").replace("", "Sem informação")
             df_raca = dff["Raça/Cor"].value_counts().reset_index()
             df_raca.columns = ["Raça/Cor", "Total"]
 
@@ -221,7 +219,7 @@ def register_callbacks(app):
             fig_raca = create_empty_fig("Raça/Cor")
 
         # ===================== Gráfico Titulação =====================
-        if "Tempo para titulação (meses)" in dff.columns:
+        if "Tempo para titulação (meses)" in dff.columns and not dff.dropna(subset=["Tempo para titulação (meses)"]).empty:
             fig_titulacao = px.histogram(
                 dff.dropna(subset=["Tempo para titulação (meses)"]),
                 x="Tempo para titulação (meses)",
@@ -236,12 +234,14 @@ def register_callbacks(app):
             fig_titulacao = create_empty_fig("Tempo para Titulação")
 
         # ===================== Gráfico Financiamento =====================
-        if "Financiamento" in dff.columns:
+        if "Financiamento" in dff.columns and not dff["Financiamento"].dropna().empty:
             df_fin = dff["Financiamento"].value_counts().reset_index()
             df_fin.columns = ["Financiamento", "Total"]
-            fig_fin = px.bar(df_fin, x="Financiamento", y="Total",
-                             title="Fontes de Financiamento",
-                             template=TEMPLATE, text_auto=True)
+            fig_fin = px.bar(
+                df_fin, x="Financiamento", y="Total",
+                title="Fontes de Financiamento",
+                template=TEMPLATE, text_auto=True
+            )
             fig_fin.update_traces(textposition="outside")
             max_value = df_fin["Total"].max()
             fig_fin.update_yaxes(range=[0, max_value * 1.2])
@@ -249,9 +249,8 @@ def register_callbacks(app):
         else:
             fig_fin = create_empty_fig("Financiamento")
 
-        # Fundo transparente
+        # ===================== Ajuste de Layout =====================
         for f in [fig_raca, fig_titulacao, fig_fin]:
             f.update_layout(paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)")
 
         return fig_raca, fig_titulacao, fig_fin
-
