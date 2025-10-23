@@ -15,7 +15,6 @@ try:
 
     print(f"📂 Lendo dados a partir de: {df_path}")
     df = pd.read_excel(df_path)
-    ativos_opcoes = sorted(df["Status"].dropna().unique()) if "Status" in df.columns else []
 
 except FileNotFoundError:
     print("⚠️ AVISO (page1.py): Arquivo 'USP_Completa.xlsx' não encontrado. Usando dados de exemplo.")
@@ -29,9 +28,28 @@ except FileNotFoundError:
         "Curso": ["Mestrado", "Doutorado", "Mestrado", "Mestrado"]
     })
 
+# ============================================================
+# Definição de colunas e listas de opções
+# ============================================================
+
+# Criar coluna de Status (caso não exista no Excel)
+if "Status" not in df.columns and "Última ocorrência" in df.columns:
+    status_map = {
+        "Matricula de Acompanhamento": "Ativos",
+        "Matriculado": "Ativos",
+        "Mudança de Nível": "Ativos",
+        "Prorrogação": "Ativos",
+        "Transcado": "Ativos",
+        "Transferido de Area": "Ativos",
+        "Titulado": "Titulados",
+        "Desligado": "Desligados"
+    }
+    df["Status"] = df["Última ocorrência"].map(status_map).fillna("Outros")
+
+# Criar listas de opções para os filtros
 programas_opcoes = sorted(df["Programa"].dropna().unique()) if "Programa" in df.columns else []
 cursos_opcoes = sorted(df["Curso"].dropna().unique()) if "Curso" in df.columns else []
-status_opcoes = sorted(df["Status_aluno"].dropna().unique()) if "Status_aluno" in df.columns else []
+ativos_opcoes = sorted(df["Status"].dropna().unique()) if "Status" in df.columns else []
 
 # ------------------------------
 # Normalização dos nomes de curso
