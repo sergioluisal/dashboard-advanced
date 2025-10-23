@@ -81,12 +81,44 @@ layout = dbc.Container([
         )
     ),
     dbc.Row(
-        dbc.Col(html.H1("Filtros Analíticos",
+        dbc.Col(html.H1("Filtros Analítico",
                         className="text-center my-4"), width=12)
     ),
 
     # ===================== Linha de Filtros 1 =====================
-    dbc.Row([   
+    dbc.Row([
+        # Financiamento
+        dbc.Col(
+            dcc.Dropdown(
+                id='filtro-financiamento',
+                options=[{'label': i, 'value': i} for i in df["Financiamento"].dropna().unique()],
+                multi=True,
+                placeholder="Selecione Financiamento",
+                style={"backgroundColor": "#2c2c2c", "color": "black", "height": "38px"}
+            ), md=3
+        ),
+
+        # Titulação
+        dbc.Col(
+            dcc.Dropdown(
+                id='filtro-titulacao',
+                options=[{'label': str(i), 'value': i} for i in sorted(df["Tempo para titulação (meses)"].dropna().unique())],
+                multi=True,
+                placeholder="Selecione Titulação (meses)",
+                style={"backgroundColor": "#2c2c2c", "color": "black", "height": "38px"}
+            ), md=3
+        ),
+
+        # Raça/Cor
+        dbc.Col(
+            dcc.Dropdown(
+                id='filtro-raca',
+                options=[{'label': i, 'value': i} for i in df["Raça/Cor"].dropna().unique()],
+                multi=True,
+                placeholder="Selecione Raça/Cor",
+                style={"backgroundColor": "#2c2c2c", "color": "black", "height": "38px"}
+            ), md=3
+        ),
 
         # Programa
         dbc.Col(
@@ -98,7 +130,10 @@ layout = dbc.Container([
                 style={"backgroundColor": "#2c2c2c", "color": "black", "height": "38px"}
             ), md=3
         ),
-        
+    ], className="mb-3"),
+
+    # ===================== Linha de Filtros 2 =====================
+    dbc.Row([
         # Curso
         dbc.Col(
             dcc.Dropdown(
@@ -119,9 +154,9 @@ layout = dbc.Container([
                 placeholder="Selecione Status (Ativos/Titulados/Desligados)",
                 style={"backgroundColor": "#2c2c2c", "color": "black", "height": "38px"}
             ), md=3
-        ),         
-        
-         # Período
+        ),
+
+        # Período
         dbc.Col(
             dcc.DatePickerRange(
                 id='filtro-periodo',
@@ -133,42 +168,6 @@ layout = dbc.Container([
                 style={"height": "38px", "width": "100%"}
             ), md=3
         ),
-    ], className="mb-3"),
-
-    # ===================== Linha de Filtros 2 =====================
-    dbc.Row([
-        # Financiamento
-        #dbc.Col(
-            #dcc.Dropdown(
-                #id='filtro-financiamento',
-                #options=[{'label': i, 'value': i} for i in df["Financiamento"].dropna().unique()],
-                #multi=True,
-                #placeholder="Selecione Financiamento",
-                #style={"backgroundColor": "#2c2c2c", "color": "black", "height": "38px"}
-            #), md=3
-        #),
-
-        # Titulação
-        #dbc.Col(
-            #dcc.Dropdown(
-                #id='filtro-titulacao',
-                #options=[{'label': str(i), 'value': i} for i in sorted(df["Tempo para titulação (meses)"].dropna().unique())],
-                #multi=True,
-                #placeholder="Selecione Titulação (meses)",
-                #style={"backgroundColor": "#2c2c2c", "color": "black", "height": "38px"}
-            #), md=3
-        #),
-
-        # Raça/Cor
-        #dbc.Col(
-            #dcc.Dropdown(
-                #id='filtro-raca',
-                #options=[{'label': i, 'value': i} for i in df["Raça/Cor"].dropna().unique()],
-                #multi=True,
-                #placeholder="Selecione Raça/Cor",
-                #style={"backgroundColor": "#2c2c2c", "color": "black", "height": "38px"}
-            #), md=3
-        #),
     ], className="mb-4"),
 
     # ===================== Linha de Gráficos =====================
@@ -183,10 +182,7 @@ layout = dbc.Container([
         dbc.Col(dcc.Graph(id='financiamento-graph', style={"height": "400px"}), md=12, className="mb-4"),
     ], className="g-4"),
         # ===================== Gráfico de Status =====================
-    #dbc.Row([
-        #html.H4("Situação dos Alunos", className="text-secondary my-3"),
-        #dbc.Col(dcc.Graph(id='status-graph', style={"height": "400px"}), md=12, className="mb-4"),
-    #], className="g-4"),
+    
 
 ], fluid=True)
 
@@ -203,9 +199,9 @@ def register_callbacks(app):
             #Output('status-graph', 'figure'),
         ],
         [
-            #Input('filtro-financiamento', 'value'),
-            #Input('filtro-titulacao', 'value'),
-            #Input('filtro-raca', 'value'),
+            Input('filtro-financiamento', 'value'),
+            Input('filtro-titulacao', 'value'),
+            Input('filtro-raca', 'value'),
             Input('filtro-programa1', 'value'),
             Input('filtro-curso1', 'value'),
             Input('filtro-status1', 'value'),
@@ -213,18 +209,16 @@ def register_callbacks(app):
             Input('filtro-periodo', 'end_date'),
         ]
     )
-    def atualizar_graficos(programa, curso, status, start_date, end_date):
-    #raca, financiamento, titulacao: quando precisar só adicionar acima
-        
+    def atualizar_graficos(financiamento, titulacao, raca, programa, curso, status, start_date, end_date):
         dff = df.copy()
 
         # Aplicar filtros
-        #if financiamento:
-            #dff = dff[dff["Financiamento"].isin(financiamento)]
-        #if titulacao:
-            #dff = dff[dff["Tempo para titulação (meses)"].isin(titulacao)]
-        #if raca:
-            #dff = dff[dff["Raça/Cor"].isin(raca)]
+        if financiamento:
+            dff = dff[dff["Financiamento"].isin(financiamento)]
+        if titulacao:
+            dff = dff[dff["Tempo para titulação (meses)"].isin(titulacao)]
+        if raca:
+            dff = dff[dff["Raça/Cor"].isin(raca)]
         if programa:
             dff = dff[dff["Programa"].isin(programa)]
         if curso:
@@ -283,18 +277,10 @@ def register_callbacks(app):
 
         # Ajusta margens e rotação dos rótulos
         fig_fin.update_layout(margin=dict(t=80, b=40, l=40, r=40), xaxis_tickangle=-45)
-        
         # Status (Ativos vs Titulados vs Desligados)
-        #df_status = dff["Status"].value_counts().reset_index()
-        #df_status.columns = ["Status", "Total"]
-        #fig_status = px.pie(df_status, names="Status", values="Total",
-        #                    title="Distribuição por Status",
-        #                   hole=0.4, template=TEMPLATE)
-        #fig_status.update_traces(textinfo="percent", textposition="inside", insidetextorientation="radial")     
-        #fig_status.update_layout(legend_title="Status", margin=dict(t=80, b=40, l=40, r=40))
-
+        
         # Fundo transparente
-        for f in [fig_raca, fig_titulacao, fig_fin, fig_status]:
+        for f in [fig_raca, fig_titulacao, fig_fin]:
             f.update_layout(paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)")
             
-        return fig_raca, fig_titulacao, fig_fin, fig_status
+        return fig_raca, fig_titulacao, fig_fin
