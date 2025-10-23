@@ -6,7 +6,7 @@ import plotly.graph_objects as go
 import pandas as pd
 
 # Importar os layouts das páginas
-from pages import home, page1, page2, page3
+from pages import home, page1, page2, page3, pag4
 
 #===========================================================================|
 #|                           Inicialização do App                          |
@@ -52,6 +52,7 @@ app.layout = html.Div(className="home-dashboard-scope", children=[
                                 dbc.Button([html.I(className="bi bi-kanban-fill me-2"), "Informações Acadêmicas"], color="primary", href="/page1", className="ms-md-2 mt-2 mt-md-0"),
                                 dbc.Button([html.I(className="bi bi-bar-chart-line-fill me-2"), "Análise Acadêmica"], color="secondary", href="/page2", className="ms-md-2 mt-2 mt-md-0"),
                                 dbc.Button([html.I(className="bi bi-file-earmark-arrow-down-fill me-2"), "Exploração Acadêmica"], color="info", href="/page3", className="ms-md-2 mt-2 mt-md-0"),
+                                bc.Button([html.I(className="bi bi-file-earmark-person"), "Análise Etária"], color="light", href="/page4", className="ms-md-2 mt-2 mt-md-0"),
                             ], width="auto", className="text-end")
                         ], justify="between", align="center")
                     ])
@@ -79,9 +80,11 @@ def display_page(pathname):
         return page2.layout
     elif pathname == '/page3':
         return page3.layout
+    elif pathname == '/page4':
+        return page4.layout
     else:
         return home.layout
-
+        
 #===========================================================================|
 #|                    Helpers para gráficos vazios                         |
 #===========================================================================|
