@@ -86,89 +86,57 @@ layout = dbc.Container([
     ),
 
     # ===================== Linha de Filtros 1 =====================
+    # Linha de Filtros
     dbc.Row([
-        # Financiamento
         dbc.Col(
-            dcc.Dropdown(
-                id='filtro-financiamento',
-                options=[{'label': i, 'value': i} for i in df["Financiamento"].dropna().unique()],
-                multi=True,
-                placeholder="Selecione Financiamento",
-                style={"backgroundColor": "#2c2c2c", "color": "black", "height": "38px"}
-            ), md=3
-        ),
-
-        # Titulação
-        dbc.Col(
-            dcc.Dropdown(
-                id='filtro-titulacao',
-                options=[{'label': str(i), 'value': i} for i in sorted(df["Tempo para titulação (meses)"].dropna().unique())],
-                multi=True,
-                placeholder="Selecione Titulação (meses)",
-                style={"backgroundColor": "#2c2c2c", "color": "black", "height": "38px"}
-            ), md=3
-        ),
-
-        # Raça/Cor
-        dbc.Col(
-            dcc.Dropdown(
-                id='filtro-raca',
-                options=[{'label': i, 'value': i} for i in df["Raça/Cor"].dropna().unique()],
-                multi=True,
-                placeholder="Selecione Raça/Cor",
-                style={"backgroundColor": "#2c2c2c", "color": "black", "height": "38px"}
-            ), md=3
-        ),
-
-        # Programa
-        dbc.Col(
-            dcc.Dropdown(
-                id="filtro-programa1",
-                options=[{"label": i, "value": i} for i in df["Programa"].dropna().unique()],
-                multi=True,
-                placeholder="Selecione o(s) Programa(s)",
-                style={"backgroundColor": "#2c2c2c", "color": "black", "height": "38px"}
-            ), md=3
-        ),
-    ], className="mb-3"),
-
-    # ===================== Linha de Filtros 2 =====================
-    dbc.Row([
-        # Curso
-        dbc.Col(
-            dcc.Dropdown(
-                id="filtro-curso1",
-                options=[{"label": i, "value": i} for i in df["Curso"].dropna().unique()],
-                multi=True,
-                placeholder="Selecione o(s) Curso(s)",
-                style={"backgroundColor": "#2c2c2c", "color": "black", "height": "38px"}
-            ), md=3
-        ),
-
-        # Status (Ativos / Titulados / Desligados)
-        dbc.Col(
-            dcc.Dropdown(
-                id="filtro-status1",
-                options=[{"label": i, "value": i} for i in df["Status"].dropna().unique()],
-                multi=True,
-                placeholder="Selecione Status (Ativos/Titulados/Desligados)",
-                style={"backgroundColor": "#2c2c2c", "color": "black", "height": "38px"}
-            ), md=3
-        ),
-
-        # Período
-        dbc.Col(
-            dcc.DatePickerRange(
-                id='filtro-periodo',
-                min_date_allowed=df["Primeira matrícula"].min().date() if "Primeira matrícula" in df.columns else None,
-                max_date_allowed=df["Primeira matrícula"].max().date() if "Primeira matrícula" in df.columns else None,
-                start_date=df["Primeira matrícula"].min().date() if "Primeira matrícula" in df.columns else None,
-                end_date=df["Primeira matrícula"].max().date() if "Primeira matrícula" in df.columns else None,
-                display_format='DD/MM/YYYY',
-                style={"height": "38px", "width": "100%"}
-            ), md=3
-        ),
-    ], className="mb-4"),
+            dbc.Card([
+                dbc.CardBody([
+                    dbc.Row([
+                        dbc.Col(
+                            dcc.Dropdown(
+                                id='filtro-programa',
+                                options=[{'label': i, 'value': i} for i in programas_opcoes],
+                                multi=True,
+                                placeholder="Selecione o(s) Programa(s)",
+                                style={"backgroundColor": "#2c2c2c", "color": "black", "height": "38px"}
+                            ), md=3
+                        ),
+                        dbc.Col(
+                            dcc.Dropdown(
+                                id='filtro-curso',
+                                options=[{'label': i, 'value': i} for i in cursos_opcoes],
+                                multi=True,
+                                placeholder="Selecione o(s) Curso(s)",
+                                style={"backgroundColor": "#2c2c2c", "color": "black", "height": "38px"}
+                            ), md=3
+                        ),
+                        dbc.Col(
+                            dcc.Dropdown(
+                                id='filtro-ativos',
+                                options=[{'label': i, 'value': i} for i in ativos_opcoes],
+                                multi=True,
+                                placeholder="Selecione Status (Ativos/Desligados)",
+                                style={"backgroundColor": "#2c2c2c", "color": "black", "height": "38px"}
+                            ), md=3
+                        ),
+                        dbc.Col(
+                            dcc.DatePickerRange(
+                            id='filtro-periodo2',
+                            min_date_allowed=df["Primeira matrícula"].min().date() if "Primeira matrícula" in df.columns else None,
+                            max_date_allowed=df["Primeira matrícula"].max().date() if "Primeira matrícula" in df.columns else None,
+                            start_date=df["Primeira matrícula"].min().date() if "Primeira matrícula" in df.columns else None,
+                            end_date=df["Primeira matrícula"].max().date() if "Primeira matrícula" in df.columns else None,
+                            display_format='DD/MM/YYYY',
+                            style={"height": "38px", "width": "100%"}
+                            ), md=3
+                        ),
+                    ])
+                ])
+            ], className="bg-dark"),
+            width=12,
+            className="mb-4"
+        )
+    ]),
 
     # ===================== Linha de Gráficos =====================
     dbc.Row([
