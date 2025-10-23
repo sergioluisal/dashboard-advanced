@@ -1,68 +1,73 @@
 import pandas as pd
 import plotly.express as px
 import dash_bootstrap_components as dbc
-from dash import html, dcc, Input, Output, register_page, callback
-import os # Certifique-se de que esta linha está no topo do arquivo com os outros imports
+from dash import html, dcc, Input, Output, callback
+import os
 
 # ============================================================
 # Carregar e Tratar Dados
 # ============================================================
 try:
-    # Constrói o caminho absoluto para o arquivo de dados
-    # Sobe um nível de diretório (da pasta 'pages' para a pasta raiz)
+    # Caminho absoluto (funciona no Render e local)
     BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    # Junta o caminho da pasta raiz com o nome do arquivo
     DATA_PATH = os.path.join(BASE_DIR, "USP_Completa.xlsx")
-    
-    # Tenta carregar o DataFrame usando o caminho completo
-    df = pd.read_excel(DATA_PATH)
-    print(f"SUCESSO (page3.py): Arquivo de dados carregado de '{DATA_PATH}'")
 
-    # Continua com o tratamento de dados APENAS se o arquivo foi carregado
+    df = pd.read_excel(DATA_PATH)
+    print(f"✅ SUCESSO (page3.py): Arquivo carregado de '{DATA_PATH}'")
+
+    # Conversão de datas e normalização
     df["Primeira matrícula"] = pd.to_datetime(df["Primeira matrícula"], errors="coerce")
     df.dropna(subset=["Primeira matrícula"], inplace=True)
-    df["Curso"] = df["Curso"].replace("Doutorado Direto", "Doutorado")
-    df['Mes_Ano_Matricula'] = df['Primeira matrícula'].dt.to_period('M').astype(str)
+    df["Curso"] = df["Curso"].replace({"Doutorado Direto": "Doutorado", "Doutora": "Doutorado"})
+    df["Mes_Ano_Matricula"] = df["Primeira matrícula"].dt.to_period("M").astype(str)
+
+    # Criar coluna de status padronizada
+    status_map = {
+        "Matricula de Acompanhamento": "Ativos",
+        "Matriculado": "Ativos",
+        "Mudança de Nível": "Ativos",
+        "Prorrogação": "Ativos",
+        "Trancado": "Ativos",
+        "Transferido de Área": "Ativos",
+        "Titulado": "Titulados",
+        "Desligado": "Desligados"
+    }
+    df["Status"] = df["Última ocorrência"].map(status_map).fillna("Outros")
 
 except FileNotFoundError:
-    print(f"ERRO CRÍTICO (page3.py): O arquivo 'USP_Completa.xlsx' não foi encontrado no caminho esperado: '{DATA_PATH}'.")
-    # Cria um DataFrame vazio com as colunas esperadas para evitar que o resto do app quebre
-    df = pd.DataFrame(columns=["Programa", "Curso", "Primeira matrícula", "Mes_Ano_Matricula"])
+    print(f"⚠️ ERRO (page3.py): Arquivo 'USP_Completa.xlsx' não encontrado em '{DATA_PATH}'.")
+    df = pd.DataFrame(columns=["Programa", "Curso", "Primeira matrícula", "Mes_Ano_Matricula", "Status"])
 
-except Exception as e:
-    print(f"ERRO INESPERADO (page3.py) ao carregar ou tratar os dados: {e}")
-    df = pd.DataFrame(columns=["Programa", "Curso", "Primeira matrícula", "Mes_Ano_Matricula"])
-
-# FIM DO NOVO CÓDIGO
-
-
-programas_opcoes = sorted(df["Programa"].unique())
-cursos_opcoes = sorted(df["Curso"].unique())
+# ============================================================
+# Filtros e Opções
+# ============================================================
+programas_opcoes = sorted(df["Programa"].dropna().unique()) if "Programa" in df.columns else []
+cursos_opcoes = sorted(df["Curso"].dropna().unique()) if "Curso" in df.columns else []
+status_opcoes = ["Ativos", "Titulados", "Desligados"]
 min_date = df["Primeira matrícula"].min()
 max_date = df["Primeira matrícula"].max()
 
 TEMPLATE = "plotly_dark"
 
-# ==============================================================
+# ============================================================
 # Layout da Página
-# ==============================================================
+# ============================================================
 layout = dbc.Container([
-    # Linha do título
+
     dbc.Row(
-        dbc.Col(html.H1("Informações Acadêmicas",
-                        className="text-center text-primary my-4"), width=12)
+        dbc.Col(html.H1("Informações Acadêmicas", className="text-center text-primary my-4"), width=12)
     ),
     dbc.Row(
-        dbc.Col(html.H1("Filtros Analíticos",
-                        className="text-center my-4"), width=12)
+        dbc.Col(html.H2("Filtros Analíticos", className="text-center my-4"), width=12)
     ),
 
-    # Linha de Filtros
+    # ================= Filtros =================
     dbc.Row([
         dbc.Col(
             dbc.Card([
                 dbc.CardBody([
                     dbc.Row([
+
                         dbc.Col(
                             dcc.Dropdown(
                                 id='filtro-programa',
@@ -70,8 +75,9 @@ layout = dbc.Container([
                                 multi=True,
                                 placeholder="Selecione o(s) Programa(s)",
                                 style={"backgroundColor": "#2c2c2c", "color": "black"}
-                            ), md=4
+                            ), md=3
                         ),
+
                         dbc.Col(
                             dcc.Dropdown(
                                 id='filtro-curso',
@@ -79,27 +85,35 @@ layout = dbc.Container([
                                 multi=True,
                                 placeholder="Selecione o(s) Curso(s)",
                                 style={"backgroundColor": "#2c2c2c", "color": "black"}
-                            ), md=4
-                        ),                        
+                            ), md=3
+                        ),
+
+                        dbc.Col(
+                            dcc.Dropdown(
+                                id='filtro-status',
+                                options=[{'label': i, 'value': i} for i in status_opcoes],
+                                multi=True,
+                                placeholder="Selecione o Status (Ativos/Titulados/Desligados)",
+                                style={"backgroundColor": "#2c2c2c", "color": "black"}
+                            ), md=3
+                        ),
+
                         dbc.Col(
                             dcc.DatePickerRange(
                                 id='filtro-periodo',
-                                min_date_allowed=min_date.date(),
-                                max_date_allowed=max_date.date(),
-                                initial_visible_month=max_date.date(),
-                                start_date=min_date.date(),
-                                end_date=max_date.date(),
+                                min_date_allowed=min_date.date() if pd.notna(min_date) else None,
+                                max_date_allowed=max_date.date() if pd.notna(max_date) else None,
+                                start_date=min_date.date() if pd.notna(min_date) else None,
+                                end_date=max_date.date() if pd.notna(max_date) else None,
                                 display_format='DD/MM/YYYY',
-                                #locale='pt-br',
                                 style={"backgroundColor": "#2c2c2c", "color": "white"}
-                            ), 
-                            md=4
+                            ), md=3
                         )
+
                     ])
                 ])
             ], className="bg-dark"),
-            width=12,
-            className="mb-4"
+            width=12, className="mb-4"
         )
     ]),
 
@@ -122,12 +136,12 @@ layout = dbc.Container([
     dbc.Row([
         dbc.Col(dcc.Graph(id='grafico-distribuicao-programa'), md=12, className="mt-4"),
     ])
+
 ], fluid=True)
 
-
-# ==============================================================
+# ============================================================
 # Callbacks da Página
-# ==============================================================
+# ============================================================
 @callback(
     [
         Output('kpi-total-alunos', 'children'),
@@ -138,49 +152,70 @@ layout = dbc.Container([
     [
         Input('filtro-programa', 'value'),
         Input('filtro-curso', 'value'),
+        Input('filtro-status', 'value'),
         Input('filtro-periodo', 'start_date'),
         Input('filtro-periodo', 'end_date')
     ]
 )
-def update_dashboard(programas_selecionados, cursos_selecionados, start_date, end_date):
+def update_dashboard(programas_selecionados, cursos_selecionados, status_selecionado, start_date, end_date):
     dff = df.copy()
+
+    # Aplicar filtros
     if start_date and end_date:
         dff = dff[(dff['Primeira matrícula'] >= start_date) & (dff['Primeira matrícula'] <= end_date)]
     if programas_selecionados:
         dff = dff[dff['Programa'].isin(programas_selecionados)]
     if cursos_selecionados:
         dff = dff[dff['Curso'].isin(cursos_selecionados)]
+    if status_selecionado:
+        dff = dff[dff['Status'].isin(status_selecionado)]
 
     total_alunos = len(dff)
 
-    evolucao = dff.groupby(['Mes_Ano_Matricula', 'Curso']).size().reset_index(name='Quantidade')
-    fig_evolucao = px.area(
-        evolucao, x='Mes_Ano_Matricula', y='Quantidade', color='Curso',
-        title="Evolução de Novas Matrículas por Mês", template=TEMPLATE
-    )
+    # ================= Evolução de Matrículas =================
+    if not dff.empty:
+        evolucao = dff.groupby(['Mes_Ano_Matricula', 'Curso']).size().reset_index(name='Quantidade')
+        fig_evolucao = px.area(
+            evolucao, x='Mes_Ano_Matricula', y='Quantidade', color='Curso',
+            title="Evolução de Novas Matrículas por Mês", template=TEMPLATE
+        )
+    else:
+        fig_evolucao = px.area(title="Evolução de Novas Matrículas por Mês")
+
     fig_evolucao.update_layout(
         yaxis_title="Nº de Alunos", xaxis_title="Período",
         paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)"
     )
 
-    dist_curso = dff['Curso'].value_counts().reset_index()
-    dist_curso.columns = ['Curso', 'Total']
-    fig_dist_curso = px.pie(
-        dist_curso, names='Curso', values='Total',
-        title="Distribuição por Curso", template=TEMPLATE, hole=0.4
-    )
+    # ================= Distribuição por Curso =================
+    if not dff.empty:
+        dist_curso = dff['Curso'].value_counts().reset_index()
+        dist_curso.columns = ['Curso', 'Total']
+        fig_dist_curso = px.pie(
+            dist_curso, names='Curso', values='Total',
+            title="Distribuição por Curso", template=TEMPLATE, hole=0.4
+        )
+    else:
+        fig_dist_curso = px.pie(title="Distribuição por Curso")
+
     fig_dist_curso.update_layout(paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)")
 
-    dist_programa = dff['Programa'].value_counts().nlargest(15).reset_index()
-    dist_programa.columns = ['Programa', 'Total']
-    fig_dist_programa = px.bar(
-        dist_programa, y='Programa', x='Total', orientation='h',
-        title="Nº de Alunos por Programas", template=TEMPLATE
-    )
+    # ================= Distribuição por Programa =================
+    if not dff.empty:
+        dist_programa = dff['Programa'].value_counts().nlargest(15).reset_index()
+        dist_programa.columns = ['Programa', 'Total']
+        fig_dist_programa = px.bar(
+            dist_programa, y='Programa', x='Total', orientation='h',
+            title="Nº de Alunos por Programas", template=TEMPLATE
+        )
+    else:
+        fig_dist_programa = px.bar(title="Nº de Alunos por Programas")
+
     fig_dist_programa.update_layout(
-        yaxis={'categoryorder':'total ascending'},
+        yaxis={'categoryorder': 'total ascending'},
         xaxis_title="Nº de Alunos", yaxis_title=None,
         paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)"
     )
 
     return total_alunos, fig_evolucao, fig_dist_curso, fig_dist_programa
+
