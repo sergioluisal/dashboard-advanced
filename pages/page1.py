@@ -25,12 +25,18 @@ except FileNotFoundError:
         "Data da defesa": [pd.NaT, '2024-01-15', pd.NaT, pd.NaT],
         "Nacionalidade": ["Brasileira", "Brasileira", "Argentina", "Brasileira"],
         "Programa": ["Engenharia", "Direito", "Medicina", "Engenharia"],
-        "Curso": ["Mestrado", "Doutorado", "Mestrado", "Mestrado"]
+        "Curso": ["Mestrado", "Doutorado Direto", "Mestrado", "Doutorado"]
     })
 
 # ============================================================
-# Definição de colunas e listas de opções
+# Normalização dos cursos e status
 # ============================================================
+# Normalizar nomes de curso — unificar "Doutorado Direto" → "Doutorado"
+if "Curso" in df.columns:
+    df["Curso"] = df["Curso"].replace({
+        "Doutorado Direto": "Doutorado",
+        "Doutora": "Doutorado"
+    })
 
 # Criar coluna de Status (caso não exista no Excel)
 if "Status" not in df.columns and "Última ocorrência" in df.columns:
