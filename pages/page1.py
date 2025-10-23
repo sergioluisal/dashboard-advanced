@@ -4,7 +4,6 @@ import plotly.graph_objects as go
 import dash_bootstrap_components as dbc
 import os
 from dash import html, dcc, Input, Output
-from pages.page2 import programas_opcoes, cursos_opcoes, ativos_opcoes
 
 # ============================================================
 # Carregar os dados
@@ -16,6 +15,7 @@ try:
 
     print(f"📂 Lendo dados a partir de: {df_path}")
     df = pd.read_excel(df_path)
+    ativos_opcoes = sorted(df["Status"].dropna().unique()) if "Status" in df.columns else []
 
 except FileNotFoundError:
     print("⚠️ AVISO (page1.py): Arquivo 'USP_Completa.xlsx' não encontrado. Usando dados de exemplo.")
