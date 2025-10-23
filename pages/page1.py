@@ -38,7 +38,9 @@ if "Curso" in df.columns:
         "Doutora": "Doutorado"
     })
 
+# ============================================================
 # Criar coluna de Status (caso não exista no Excel)
+# ============================================================
 if "Status" not in df.columns and "Última ocorrência" in df.columns:
     status_map = {
         "Matricula de Acompanhamento": "Ativos",
@@ -52,10 +54,12 @@ if "Status" not in df.columns and "Última ocorrência" in df.columns:
     }
     df["Status"] = df["Última ocorrência"].map(status_map).fillna("Outros")
 
+# ============================================================
 # Criar listas de opções para os filtros
+# ============================================================
 programas_opcoes = sorted(df["Programa"].dropna().unique()) if "Programa" in df.columns else []
 cursos_opcoes = sorted(df["Curso"].dropna().unique()) if "Curso" in df.columns else []
-ativos_opcoes = sorted(df["Status"].dropna().unique()) if "Status" in df.columns else []
+status_opcoes = ["Ativos", "Titulados", "Desligados"]
 
 # ============================================================
 # Configuração de tema e figura vazia
@@ -87,7 +91,7 @@ layout = dbc.Container([
         )
     ),
     dbc.Row(
-        dbc.Col(html.H1("Filtros Analítico", className="text-center my-4"), width=12)
+        dbc.Col(html.H1("Filtros Analíticos", className="text-center my-4"), width=12)
     ),
 
     # ===================== Linha de Filtros =====================
@@ -96,6 +100,7 @@ layout = dbc.Container([
             dbc.Card([
                 dbc.CardBody([
                     dbc.Row([
+
                         dbc.Col(
                             dcc.Dropdown(
                                 id='filtro-programa',
@@ -105,6 +110,7 @@ layout = dbc.Container([
                                 style={"backgroundColor": "#2c2c2c", "color": "black", "height": "38px"}
                             ), md=3
                         ),
+
                         dbc.Col(
                             dcc.Dropdown(
                                 id='filtro-curso',
@@ -114,15 +120,17 @@ layout = dbc.Container([
                                 style={"backgroundColor": "#2c2c2c", "color": "black", "height": "38px"}
                             ), md=3
                         ),
+
                         dbc.Col(
                             dcc.Dropdown(
-                                id='filtro-ativos',
-                                options=[{'label': i, 'value': i} for i in ativos_opcoes],
+                                id='filtro-status',
+                                options=[{'label': i, 'value': i} for i in status_opcoes],
                                 multi=True,
-                                placeholder="Selecione Status (Ativos/Titulados/Desligados)",
+                                placeholder="Selecione o Status (Ativos / Titulados / Desligados)",
                                 style={"backgroundColor": "#2c2c2c", "color": "black", "height": "38px"}
                             ), md=3
                         ),
+
                         dbc.Col(
                             dcc.DatePickerRange(
                                 id='filtro-periodo2',
@@ -134,6 +142,7 @@ layout = dbc.Container([
                                 style={"height": "38px", "width": "100%"}
                             ), md=3
                         ),
+
                     ])
                 ])
             ], className="bg-dark"),
