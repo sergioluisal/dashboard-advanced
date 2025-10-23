@@ -17,7 +17,7 @@ try:
     df = pd.read_excel(df_path)
 
 except FileNotFoundError:
-    print("⚠️ AVISO (page2.py): Arquivo 'USP_Completa.xlsx' não encontrado. Usando dados de exemplo.")
+    print("⚠️ AVISO (page1.py): Arquivo 'USP_Completa.xlsx' não encontrado. Usando dados de exemplo.")
     df = pd.DataFrame({
         "Data da ocorrência": pd.to_datetime(['2023-05-10', '2024-01-15', '2022-11-20', '2023-08-01']),
         "Primeira matrícula": pd.to_datetime(['2021-02-10', '2021-08-15', '2021-02-10', '2022-02-01']),
