@@ -21,7 +21,11 @@ except FileNotFoundError:
         "Primeira matrícula": pd.date_range("2020-01-01", periods=5, freq="Y")
     })
 
-    # ------------------------------
+programas_opcoes = sorted(df["Programa"].dropna().unique()) if "Programa" in df.columns else []
+cursos_opcoes = sorted(df["Curso"].dropna().unique()) if "Curso" in df.columns else []
+status_opcoes = sorted(df["Status_aluno"].dropna().unique()) if "Status_aluno" in df.columns else []
+
+# ------------------------------
 # Normalização dos nomes de curso
 # ------------------------------
 if "Curso" in df.columns:
