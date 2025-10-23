@@ -3,6 +3,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 import dash_bootstrap_components as dbc
 from dash import html, dcc, Input, Output
+from pages.page2 import programas_opcoes, cursos_opcoes, ativos_opcoes
 
 # ============================================================
 # Carregar os dados
