@@ -6,7 +6,7 @@ import plotly.graph_objects as go
 import pandas as pd
 
 # Importar os layouts das páginas
-from pages import home, page1, page2, page3, pag4
+from pages import home, page1, page2, page3, page4
 
 #===========================================================================|
 #|                           Inicialização do App                          |
@@ -49,10 +49,10 @@ app.layout = html.Div(className="home-dashboard-scope", children=[
                             dbc.Col(html.H5("Navegação", className="card-title mb-0"), width="auto"),
                             dbc.Col([
                                 dbc.Button([html.I(className="bi bi-house-door-fill me-2"), "Home"], color="dark", href="/", className="ms-md-2"),
-                                dbc.Button([html.I(className="bi bi-kanban-fill me-2"), "Informações Acadêmicas"], color="primary", href="/page1", className="ms-md-2 mt-2 mt-md-0"),
+                                dbc.Button([html.I(className="bi bi-kanban-fill me-2"), "Informções Acadêmicas"], color="primary", href="/page1", className="ms-md-2 mt-2 mt-md-0"),
                                 dbc.Button([html.I(className="bi bi-bar-chart-line-fill me-2"), "Análise Acadêmica"], color="secondary", href="/page2", className="ms-md-2 mt-2 mt-md-0"),
                                 dbc.Button([html.I(className="bi bi-file-earmark-arrow-down-fill me-2"), "Exploração Acadêmica"], color="info", href="/page3", className="ms-md-2 mt-2 mt-md-0"),
-                                bc.Button([html.I(className="bi bi-file-earmark-person"), "Análise Etária"], color="light", href="/page4", className="ms-md-2 mt-2 mt-md-0"),
+                                dbc.Button([html.I(className="bi bi-file-earmark-person"), "Análise Etária"], color="light", href="/page4", className="ms-md-2 mt-2 mt-md-0"),
                             ], width="auto", className="text-end")
                         ], justify="between", align="center")
                     ])
@@ -84,7 +84,7 @@ def display_page(pathname):
         return page4.layout
     else:
         return home.layout
-        
+
 #===========================================================================|
 #|                    Helpers para gráficos vazios                         |
 #===========================================================================|
@@ -195,7 +195,7 @@ def atualizar_page2(programa, curso, status, start_date, end_date):
     plot_bgcolor="rgba(0,0,0,0)"
     )  
 
-    # fig5 - Status
+    # fig5  Distribuição de Status dos Alunos (Ativos, Titulados, Desligados)
     status_categorias = ["Ativos", "Titulados", "Desligados"]
 
     df_status = (
@@ -203,7 +203,7 @@ def atualizar_page2(programa, curso, status, start_date, end_date):
     .value_counts()
     .reindex(status_categorias, fill_value=0)
     .reset_index()
-    )
+)
     df_status.columns = ["Status", "Total"]
 
     if df_status["Total"].sum() == 0:
@@ -227,7 +227,7 @@ def atualizar_page2(programa, curso, status, start_date, end_date):
     fig5.update_layout(
     paper_bgcolor="rgba(0,0,0,0)",
     plot_bgcolor="rgba(0,0,0,0)"
-   )
+)
 
     # fig6 - Nacionalidade
     tot_br = df[df["Nacionalidade"].str.lower() == "brasileira"].shape[0]
@@ -269,9 +269,4 @@ def atualizar_page2(programa, curso, status, start_date, end_date):
 #|                             Executar o App                              |
 #===========================================================================|
 if __name__ == '__main__':
-    app.run(debug=False, host='0.0.0.0', port=8080)
-
-
-
-
-
+    app.run(debug=True)
