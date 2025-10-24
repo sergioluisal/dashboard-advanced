@@ -52,7 +52,7 @@ app.layout = html.Div(className="home-dashboard-scope", children=[
                                 dbc.Button([html.I(className="bi bi-kanban-fill me-2"), "Informções Acadêmicas"], color="primary", href="/page1", className="ms-md-2 mt-2 mt-md-0"),
                                 dbc.Button([html.I(className="bi bi-bar-chart-line-fill me-2"), "Análise Acadêmica"], color="secondary", href="/page2", className="ms-md-2 mt-2 mt-md-0"),
                                 dbc.Button([html.I(className="bi bi-file-earmark-arrow-down-fill me-2"), "Exploração Acadêmica"], color="info", href="/page3", className="ms-md-2 mt-2 mt-md-0"),
-                                dbc.Button([html.I(className="bi bi-file-earmark-person"), "Análise Etária"], color="light", href="/page4", className="ms-md-2 mt-2 mt-md-0"),
+                                dbc.Button([html.I(className="bi bi-file-earmark-person me-2"), "Análise Etária"], color="light", href="/page4", className="ms-md-2 mt-2 mt-md-0"),
                             ], width="auto", className="text-end")
                         ], justify="between", align="center")
                     ])
