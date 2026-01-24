@@ -32,7 +32,7 @@ except FileNotFoundError:
     df = pd.DataFrame()
 
 # Classificar Alunos
-ativos_list = ["Matrícula de Acompanhamento", "Matriculado", "Mudança de Nível", "Prorrogação", "Trancado", "Transferido de Área"]
+ativos_list = ["Matrícula de Acompanhamento", "Matriculado", "Mudança de Nível", "Mudança de Regulamento", "Nova Matrícula", "Prorrogação", "Trancado", "Transferido de Área"]
 def classificar_aluno(row):
     if row["Última ocorrência"] in ativos_list: return "Ativo"
     elif row["Última ocorrência"] == "Titulado": return "Titulado"
